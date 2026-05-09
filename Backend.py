@@ -12,7 +12,8 @@ from langgraph.graph.message import add_messages
 from langchain_core.messages import BaseMessage, HumanMessage
 
 llm = ChatGroq(
-    model="llama-3.3-70b-versatile"
+    model="llama-3.3-70b-versatile",
+    streaming=True
 )
 
 class ChatState(TypedDict):
@@ -38,4 +39,4 @@ graph.add_edge(START, 'chat_node')
 graph.add_edge('chat_node', END)
 
 chatbot = graph.compile(checkpointer=checkpointer)
-    
+
