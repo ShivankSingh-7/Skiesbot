@@ -7,3 +7,4 @@ python-dotenv
 langchain-google-genai
 ipykernel
 pydantic
+streamlit
