@@ -8,3 +8,4 @@ langchain-google-genai
 ipykernel
 pydantic
 streamlit
+langgraph-checkpoint-sqlite
