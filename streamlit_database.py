@@ -3,6 +3,7 @@ from langgraph_database import chatbot, retrieve_threads
 from langchain_core.messages import HumanMessage
 import uuid
 
+
 #*********************** utility function ***************************
 def generate_thread_id():
     thread_id = uuid.uuid4()
@@ -34,8 +35,14 @@ def old_chat(thread_id):
 if 'thread_id' not in st.session_state:
     st.session_state['thread_id'] = generate_thread_id()
 
-CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
+# CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']}}
 
+CONFIG = {'configurable': {'thread_id': st.session_state['thread_id']},
+          "metadata":{
+              "thread_id": st.session_state["thread_id"]
+          },
+          "run_name": "chat_turn"
+          }
 
 if 'message_history' not in st.session_state:
     st.session_state['message_history'] = []
