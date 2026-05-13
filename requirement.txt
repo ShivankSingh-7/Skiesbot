@@ -9,3 +9,4 @@ ipykernel
 pydantic
 streamlit
 langgraph-checkpoint-sqlite
+tavily-python
