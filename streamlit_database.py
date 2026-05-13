@@ -1,6 +1,6 @@
 import streamlit as st
 from langgraph_tools_backend import chatbot, retrieve_threads
-from langchain_core.messages import HumanMessage, AIMessage
+from langchain_core.messages import HumanMessage, AIMessage, AIMessageChunk, ToolMessage
 import uuid
 
 
@@ -97,17 +97,54 @@ if user_input:
     with st.chat_message('user'):
         st.text(user_input)
         
-    with st.chat_message('assistant'):
+    with st.chat_message("assistant"):
+
+        status_holder = {"box": None}
+
         def ai_only_stream():
+
             for message_chunk, metadata in chatbot.stream(
-                {'messages': [HumanMessage(content=user_input)]},
+                {"messages": [HumanMessage(content=user_input)]},
                 config=CONFIG,
-                stream_mode='messages'
+                stream_mode="messages"
             ):
-                if isinstance(message_chunk, AIMessage):
-                    yield message_chunk.content
-                    
+
+                # TOOL MESSAGE
+                if isinstance(message_chunk, ToolMessage):
+
+                    tool_name = getattr(message_chunk, "name", "tool")
+
+                    if status_holder["box"] is None:
+
+                        status_holder["box"] = st.status(
+                            f"🔧 Using `{tool_name}`...",
+                            expanded=True
+                        )
+
+                    else:
+
+                        status_holder["box"].update(
+                            label=f"🔧 Using `{tool_name}`...",
+                            state="running",
+                            expanded=True
+                        )
+
+                # AI STREAMING
+                if isinstance(message_chunk, (AIMessage, AIMessageChunk)):
+
+                    if message_chunk.content:
+                        yield message_chunk.content
+
         ai_message = st.write_stream(ai_only_stream)
+
+    # Finalize tool status
+    if status_holder["box"] is not None:
+
+        status_holder["box"].update(
+            label="✅ Tool finished",
+            state="complete",
+            expanded=False
+        )
         
         
     st.session_state['message_history'].append({'role': 'assistant', 'content': ai_message})

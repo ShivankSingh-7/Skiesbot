@@ -81,7 +81,7 @@ tool_node = ToolNode(tools)
 
 # sqlite database 
 
-conn = sqlite3.connect(database="Rag_Chatbot", check_same_thread=False)
+conn = sqlite3.connect(database="Rag_Chatbot.db", check_same_thread=False)
 
 
 # checkpointer
