@@ -10,3 +10,8 @@ pydantic
 streamlit
 langgraph-checkpoint-sqlite
 tavily-python
+sentence-transformers
+langchain-huggingface
+transformers
+pypdf
+langchain_chroma
